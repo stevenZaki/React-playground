@@ -14,27 +14,24 @@ export default function Page() {
   
 
   async function fetchQuote() {
-    
-    setIsLoading(true);
-    setError(null);
+  setIsLoading(true);
+  setError(null);
 
-    try {
-      const res = await fetch("https://zenquotes.io/api/random", {cache: "no-store"}); 
-      if(!res.ok) throw new Error("Failed to fetch");
+  try {
+    const res = await fetch("https://cors-anywhere.herokuapp.com/https://zenquotes.io/api/random", { cache: "no-store" }); 
+    if (!res.ok) throw new Error("Failed to fetch");
 
-      const data = await res.json()
-      setQuoteText(data.content || "");
-      setQuoteAuthor(data.author || "");
+    const data = await res.json();
+    const quoteObj = data[0]; // first object from array
+    setQuoteText(quoteObj.q || "");
+    setQuoteAuthor(quoteObj.a || "");
 
-    }  catch {
-      
-      setError("Could not load a quote. Try again.");
-
-
+  } catch {
+    setError("Could not load a quote. Try again.");
   } finally {
-    setIsLoading(false)
+    setIsLoading(false);
   }
-  }
+}
 
   useEffect(() => {fetchQuote(); }, [])
 
